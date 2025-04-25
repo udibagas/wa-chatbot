@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "build": "cd client-app && npm install && npm run build && cd ..",
+    "migrate": "npx sequelize db:migrate",
     "start": "node ./bin/www"
   },
   "dependencies": {
@@ -24,6 +25,7 @@
     "morgan": "~1.9.1",
     "pg": "^8.15.5",
     "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.2",
     "serverless-http": "^3.2.0",
     "whatsapp": "^0.0.5-Alpha"
   }
