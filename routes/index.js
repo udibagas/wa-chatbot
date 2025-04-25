@@ -1,9 +1,11 @@
 var express = require("express");
+const { auth } = require("../middlewares/auth.middleware");
 var router = express.Router();
 
-/* GET home page. */
-router.get("/", function (req, res, next) {
-  res.render("index", { title: "Express" });
-});
+router.use(require("./auth"));
+router.use("/webhook", require("./webhook"));
+
+router.use(auth);
+router.use("/wa", require("./wa"));
 
 module.exports = router;
