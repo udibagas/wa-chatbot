@@ -49,12 +49,8 @@ router
       });
 
     sendWhatsAppMessage({
-      message: `
-        Terimakasih telah menghubungi kami.
-        Kami akan segera menindaklanjuti pesan Anda.
-
-        *LaporKami*
-        `,
+      message:
+        "Terimakasih telah menghubungi kami.\nKami akan segera menindaklanjuti pesan Anda.\n\n*LaporKami*",
       phoneNumber: from,
       type: "text",
     })
