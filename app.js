@@ -28,6 +28,10 @@ app.get("/", function (req, res) {
 
 app.get("/webhook", function (req, res) {
   const token = process.env.TOKEN || "token";
+
+  console.log("Token", token);
+  console.log("Received token", req.query["hub.verify_token"]);
+
   if (req.query["hub.verify_token"] === token) {
     res.status(200).send(req.query["hub.challenge"]);
   } else {
