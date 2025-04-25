@@ -1,4 +1,4 @@
-const wa = require("../services/wa.service");
+const useWa = require("../services/wa.service");
 
 async function sendWhatsAppMessage({
   message,
@@ -9,6 +9,7 @@ async function sendWhatsAppMessage({
   components = [],
   file,
 }) {
+  const wa = useWa();
   let response;
 
   switch (type) {
