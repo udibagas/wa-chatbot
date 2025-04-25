@@ -5,7 +5,7 @@ var router = express.Router();
 router.use(require("./auth"));
 router.use("/webhook", require("./webhook"));
 
-router.use(auth);
-router.use("/wa", require("./wa"));
+router.use("/wa", auth, require("./wa"));
+router.use("/api", auth, require("./api"));
 
 module.exports = router;
