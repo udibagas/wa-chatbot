@@ -32,7 +32,11 @@ router
     const { changes } = entry[0];
     const { value } = changes[0];
 
-    const { id: mid, from, timestamp, type, text, image } = value.messages[0];
+    if (!value.messages) {
+      return res.sendStatus(200);
+    }
+
+    const { id: mid, from, timestamp, type, text, image } = value.messages?.[0];
     Message.create({
       mid,
       from,
