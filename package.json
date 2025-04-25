@@ -1,6 +1,8 @@
 {
   "name": "wa-chatbot",
-  "engines.node": "23.8.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "version": "0.0.0",
   "private": true,
   "scripts": {
