@@ -1,9 +1,10 @@
 const router = require("express").Router();
 const token = process.env.TOKEN || "default_token";
+const { Notification } = require("../models");
 
 router
   // webhook verification
-  .get("/", function (req, res) {
+  .get("/", (req, res) => {
     if (req.query["hub.verify_token"] === token) {
       res.status(200).send(req.query["hub.challenge"]);
     } else {
@@ -12,7 +13,8 @@ router
   })
 
   // webhook endpoint
-  .post("/", function (req, res) {
+  .post("/", async (req, res) => {
+    await Notification.create({ data: req.body });
     res.sendStatus(200);
   });
 
