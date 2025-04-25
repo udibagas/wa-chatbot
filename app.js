@@ -8,6 +8,8 @@ const logger = require("morgan");
 const app = express();
 const xhub = require("express-x-hub");
 
+const token = process.env.TOKEN || "default_token";
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
@@ -27,9 +29,6 @@ app.get("/", function (req, res) {
 });
 
 app.get("/webhook", function (req, res) {
-  const token = process.env.TOKEN;
-  console.log(process.env);
-
   if (req.query["hub.verify_token"] === token) {
     res.status(200).send(req.query["hub.challenge"]);
   } else {
