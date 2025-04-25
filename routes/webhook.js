@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const token = process.env.TOKEN || "default_token";
 const { Notification, Message } = require("../models");
+const sendWhatsAppMessage = require("../utils/sendWhatsAppMessage");
 
 router
   // webhook verification
@@ -14,7 +15,14 @@ router
 
   // webhook endpoint
   .post("/", async (req, res) => {
-    await Notification.create({ data: req.body });
+    Notification.create({ data: req.body })
+      .then(() => {
+        console.log("Notification saved successfully");
+      })
+      .catch((err) => {
+        console.error("Error saving notification:", err);
+      });
+
     const { object, entry } = req.body;
 
     if (object !== "whatsapp_business_account") {
@@ -25,14 +33,37 @@ router
     const { value } = changes[0];
 
     const { id: mid, from, timestamp, type, text, image } = value.messages[0];
-    await Message.create({
+    Message.create({
       mid,
       from,
       timestamp,
       type,
       text,
       image,
-    });
+    })
+      .then(() => {
+        console.log("Message saved successfully");
+      })
+      .catch((err) => {
+        console.error("Error saving message:", err);
+      });
+
+    sendWhatsAppMessage({
+      message: `
+        Terimakasih telah menghubungi kami.
+        Kami akan segera menindaklanjuti pesan Anda.
+
+        *LaporKami*
+        `,
+      phoneNumber: from,
+      type: "text",
+    })
+      .then(() => {
+        console.log("Message sent successfully");
+      })
+      .catch((err) => {
+        console.error("Error sending message:", err);
+      });
 
     res.sendStatus(200);
   });
