@@ -19,7 +19,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-const token = process.env.TOKEN || "token";
 const received_updates = [];
 
 app.get("/", function (req, res) {
@@ -28,6 +27,7 @@ app.get("/", function (req, res) {
 });
 
 app.get("/webhook", function (req, res) {
+  const token = process.env.TOKEN || "token";
   if (req.query["hub.verify_token"] === token) {
     res.status(200).send(req.query["hub.challenge"]);
   } else {
