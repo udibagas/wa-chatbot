@@ -19,6 +19,7 @@ const config = {
     database: process.env.PGDATABASE,
     host: process.env.PGHOST,
     dialect: "postgres",
+    logging: false,
   },
 };
 
