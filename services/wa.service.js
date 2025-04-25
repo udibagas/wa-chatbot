@@ -32,6 +32,8 @@ function useWa() {
 
     return response.data;
   };
+
+  return wa;
 }
 
 module.exports = useWa;
