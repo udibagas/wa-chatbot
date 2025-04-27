@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const sendWhatsAppMessage = require("../utils/sendWhatsAppMessage");
 module.exports = (sequelize, DataTypes) => {
   class Session extends Model {
     static associate(models) {
