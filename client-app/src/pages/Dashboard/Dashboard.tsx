@@ -6,6 +6,7 @@ export interface MessageType {
   createdAt: string;
   from: string;
   type: string;
+  mediaUrl?: string;
   text?: {
     body: string;
   };

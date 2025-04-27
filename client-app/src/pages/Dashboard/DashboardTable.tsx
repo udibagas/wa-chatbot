@@ -1,37 +1,23 @@
 import { ReloadOutlined } from "@ant-design/icons";
 import DataTable from "../../components/DataTable";
 import PageHeader from "../../components/PageHeader";
-import { Input, Modal } from "antd";
+import { Image, Input } from "antd";
 import { useDataTableContext } from "../../hooks/useDataTable";
 import { MessageType } from "./Dashboard";
-import { Image, MessageSquareTextIcon } from "lucide-react";
-import { axiosInstance } from "../../lib/api";
 import ActionButton from "../../components/buttons/ActionButton";
 
 export default function UserTable() {
   const { refreshData, setSearch, setCurrentPage, handleDelete } = useDataTableContext()
 
-  async function showImage(imageId: string) {
-    // TODO: Implement the logic to show the image
-    const res = await axiosInstance.get(`/api/messages/image/${imageId}`);
-    const data: { url: string } = res.data;
-
-    Modal.info({
-      title: "Image",
-      content: <img src={data.url} alt="Image" />,
-      onOk() { },
-    })
-  }
-
   const columns = [
     {
-      title: "",
+      title: "Image",
       align: "center" as const,
       dataIndex: "type",
-      width: 50,
+      width: 150,
       key: "type",
       render: (_: string, record: MessageType) => {
-        return record.type == 'text' ? <MessageSquareTextIcon /> : <Image onClick={() => showImage(record.image?.id as string)} />
+        return record.type == 'image' ? <Image width={100} height={100} src={`/${record.mediaUrl}`} alt="" /> : ''
       },
     },
     {
