@@ -4,6 +4,7 @@ const axios = require("axios");
 const fs = require("fs");
 const moment = require("moment");
 const sendWhatsAppMessage = require("../utils/sendWhatsAppMessage");
+const useWa = require("../services/wa.service");
 
 module.exports = (sequelize, DataTypes) => {
   class Message extends Model {
@@ -34,6 +35,61 @@ module.exports = (sequelize, DataTypes) => {
       res.data.pipe(fs.createWriteStream(path));
       await this.update({ mediaUrl: path });
       return path;
+    }
+
+    sendWelcome() {
+      const wa = useWa();
+
+      const list = {
+        type: "list",
+        header: {
+          type: "text",
+          text: "Selamat Datang!",
+        },
+        body: {
+          text: "Selamat datang di layanan pengaduan kami. Apa yang ingin Anda laporkan?",
+        },
+        footer: {
+          text: "FOOTER_TEXT",
+        },
+        action: {
+          button: "BUTTON_TEXT",
+          sections: [
+            {
+              title: "SECTION_1_TITLE",
+              rows: [
+                {
+                  id: "SECTION_1_ROW_1_ID",
+                  title: "SECTION_1_ROW_1_TITLE",
+                  description: "SECTION_1_ROW_1_DESCRIPTION",
+                },
+                {
+                  id: "SECTION_1_ROW_2_ID",
+                  title: "SECTION_1_ROW_2_TITLE",
+                  description: "SECTION_1_ROW_2_DESCRIPTION",
+                },
+              ],
+            },
+            {
+              title: "SECTION_2_TITLE",
+              rows: [
+                {
+                  id: "SECTION_2_ROW_1_ID",
+                  title: "SECTION_2_ROW_1_TITLE",
+                  description: "SECTION_2_ROW_1_DESCRIPTION",
+                },
+                {
+                  id: "SECTION_2_ROW_2_ID",
+                  title: "SECTION_2_ROW_2_TITLE",
+                  description: "SECTION_2_ROW_2_DESCRIPTION",
+                },
+              ],
+            },
+          ],
+        },
+      };
+
+      wa.messages.interactive(list, this.from);
     }
 
     sendResponse(template) {
@@ -92,7 +148,7 @@ module.exports = (sequelize, DataTypes) => {
 
     // Jika session baru, kirim pesan sambutan
     if (created) {
-      message.sendResponse("welcome");
+      message.sendWelcome();
       return;
     }
 
