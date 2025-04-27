@@ -78,8 +78,6 @@ module.exports = (sequelize, DataTypes) => {
         .catch((err) => console.error("Error downloading image:", err));
     }
 
-    console.log(message.body, "<< message.body");
-
     // Cari session yang masih aktif atau create session
     const [session, created] = await sequelize.models.Session.findOrCreate({
       where: {
@@ -117,7 +115,7 @@ module.exports = (sequelize, DataTypes) => {
         3: "environment",
         4: "infrastucture",
         5: "other",
-      }[message.body];
+      }[message.message.body];
 
       if (!type) {
         session.sendInvalidResponse();
@@ -125,7 +123,7 @@ module.exports = (sequelize, DataTypes) => {
       }
 
       currentState = "type";
-      updatedContext.type = message.body;
+      updatedContext.type = message.message.body;
       message.sendResponse(`${message.type}/title`);
     }
 
@@ -136,7 +134,7 @@ module.exports = (sequelize, DataTypes) => {
       }
 
       currentState = "title";
-      updatedContext.title = message.body;
+      updatedContext.title = message.message.body;
       message.sendResponse(`${session.context.type}/description`);
     }
 
@@ -147,7 +145,7 @@ module.exports = (sequelize, DataTypes) => {
       }
 
       currentState = "description";
-      updatedContext.description = message.body;
+      updatedContext.description = message.message.body;
       message.sendResponse("priority");
     }
 
@@ -162,7 +160,7 @@ module.exports = (sequelize, DataTypes) => {
         2: "medium",
         3: "high",
         4: "urgent",
-      }[message.body];
+      }[message.message.body];
 
       if (!priority) {
         session.sendInvalidResponse();

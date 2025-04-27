@@ -47,7 +47,6 @@ async function sendWhatsAppMessage({
   }
 
   const body = await response.responseBodyToJSON();
-  console.log(body);
   if (response.statusCode() !== 200) throw body;
   return body;
 }
