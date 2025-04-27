@@ -72,7 +72,7 @@ export default function Login() {
             variant="solid"
             disabled={loading}
           >
-            {loading ? 'Login' : 'Logging in...'}
+            {loading ? 'Logging in...' : 'Login'}
           </Button>
         </Form.Item>
       </Form>
