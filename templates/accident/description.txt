@@ -1,0 +1,16 @@
+Tulis rincian kejadian. Contoh:
+
+Kecelakaan beruntun melibatkan 4 kendaraan meliputi:
+[Tulis daftar kendaraan yang terlibat]
+
+*Korban jiwa:*
+[Tulis daftar korban jiwa meliputi jenis kelamin, usia, dan informasi lainnya]
+
+*Korban luka - luka:*
+[Tulis daftar korban luka - luka meliputi jenis kelamin, usia, dan informasi lainnya]
+
+*Sebab kecelakaan:*
+[Tulis dugaan sebab kecelakaan]
+
+*Tindak lanjut yang diharapkan:*
+[Tulis tindak lanjut yang diharapkan]

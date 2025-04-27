@@ -1,0 +1,8 @@
+Tentukan prioritas aduan Anda:
+
+1. Rendah
+2. Sedang
+3. Tinggi
+4. Kritis
+
+Jawab dengan angka

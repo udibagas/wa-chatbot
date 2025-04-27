@@ -1,0 +1,10 @@
+Terimakasih telah menghubungi kami.
+Apa yang ingin ada laporkan?
+
+1. Kecelakaan
+2. Tindak Kriminal
+3. Masalah Lingkungan
+4. Masalah Infrastruktur
+5. Lainnya
+
+Jawab dengan angka

@@ -1,0 +1,4 @@
+Tulis keterangan singkat kejadian. Contoh:
+
+- Kecelakaan tunggal di Jalan Gatot Subroto
+- Kecelakaan beruntun di Tol Jagorawi
