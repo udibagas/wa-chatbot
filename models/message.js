@@ -78,6 +78,8 @@ module.exports = (sequelize, DataTypes) => {
         .catch((err) => console.error("Error downloading image:", err));
     }
 
+    console.log(message.body, "<< message.body");
+
     // Cari session yang masih aktif atau create session
     const [session, created] = await sequelize.models.Session.findOrCreate({
       where: {
