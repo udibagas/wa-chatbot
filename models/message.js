@@ -123,8 +123,8 @@ module.exports = (sequelize, DataTypes) => {
       }
 
       currentState = "type";
-      updatedContext.type = message.message.body;
-      message.sendResponse(`${message.type}/title`);
+      updatedContext.type = type;
+      message.sendResponse(`${type}/title`);
     }
 
     if (session.currentState === "type") {
