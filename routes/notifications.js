@@ -1,6 +1,5 @@
-const { default: axios } = require("axios");
 const { auth } = require("../middlewares/auth.middleware");
-const { Message } = require("../models");
+const { Notification } = require("../models");
 const router = require("express").Router();
 
 router
@@ -16,7 +15,9 @@ router
     };
 
     try {
-      const { count: total, rows } = await Message.findAndCountAll(options);
+      const { count: total, rows } = await Notification.findAndCountAll(
+        options
+      );
       res.status(200).json({
         total,
         page: +page,
@@ -31,10 +32,10 @@ router
 
   .delete("/:id", async (req, res, next) => {
     try {
-      const user = await Message.findByPk(req.params.id);
+      const user = await Notification.findByPk(req.params.id);
 
       if (!user) {
-        const error = new Error("Message not found");
+        const error = new Error("Notification not found");
         error.status = 404;
         throw error;
       }

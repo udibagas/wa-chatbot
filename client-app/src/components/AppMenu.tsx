@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Menu, MenuProps } from 'antd';
-import { LayoutDashboardIcon, User } from 'lucide-react';
+import { BellDotIcon, LayoutDashboardIcon, User } from 'lucide-react';
 import { Link } from 'react-router';
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -15,6 +15,11 @@ const menuItems: MenuItem[] = [
         label: <Link to="/">Dashboard</Link>,
         key: "/",
         icon: <LayoutDashboardIcon />,
+      },
+      {
+        label: <Link to="/notifications">Notification</Link>,
+        key: "/notifications",
+        icon: <BellDotIcon />,
       },
     ],
   },
