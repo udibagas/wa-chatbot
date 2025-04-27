@@ -4,6 +4,7 @@ import { AxiosError } from "axios";
 import { AxiosErrorResponseType } from "../types";
 import { axiosInstance } from "../lib/api";
 import { useNavigate } from "react-router";
+import { useState } from "react";
 
 type LoginValues = {
   email?: string;
@@ -12,8 +13,10 @@ type LoginValues = {
 
 export default function Login() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   const onFinish: FormProps<LoginValues>['onFinish'] = async (values) => {
-    console.log("Success:", values);
+    setLoading(true);
     try {
       await axiosInstance.post("/auth/login", values);
       message.success("Login successful!");
@@ -24,6 +27,8 @@ export default function Login() {
         ?.data as AxiosErrorResponseType;
 
       message.error(axiosErrorResponse.message ?? axiosError.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -65,8 +70,9 @@ export default function Login() {
             htmlType="submit"
             color="default"
             variant="solid"
+            disabled={loading}
           >
-            Login
+            {loading ? 'Login' : 'Logging in...'}
           </Button>
         </Form.Item>
       </Form>
