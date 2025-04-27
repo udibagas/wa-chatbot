@@ -1,6 +1,5 @@
 "use strict";
 const { Model } = require("sequelize");
-const sendWhatsAppMessage = require("../utils/sendWhatsAppMessage");
 const axios = require("axios");
 const fs = require("fs");
 const moment = require("moment");
@@ -42,8 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       from: DataTypes.STRING,
       timestamp: DataTypes.INTEGER,
       type: DataTypes.STRING,
-      text: DataTypes.JSON,
-      image: DataTypes.JSON,
+      message: DataTypes.JSON,
       mediaUrl: DataTypes.STRING,
     },
     {
@@ -54,30 +52,12 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Message.afterCreate((message) => {
-    // save image to mediaUrl
     if (message.type === "image") {
       message
         .downloadMedia()
-        .then(() => {
-          console.log("Image downloaded successfully");
-        })
-        .catch((err) => {
-          console.error("Error downloading image:", err);
-        });
+        .then(() => console.log("Image downloaded successfully"))
+        .catch((err) => console.error("Error downloading image:", err));
     }
-
-    sendWhatsAppMessage({
-      message:
-        "Terimakasih telah menghubungi kami.\nKami akan segera menindaklanjuti pesan Anda.\n\n*LaporKami*",
-      phoneNumber: message.from,
-      type: "text",
-    })
-      .then(() => {
-        console.log("Message sent successfully");
-      })
-      .catch((err) => {
-        console.error("Error sending message:", err);
-      });
   });
 
   return Message;

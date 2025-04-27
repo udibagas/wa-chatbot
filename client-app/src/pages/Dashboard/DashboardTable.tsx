@@ -29,9 +29,9 @@ export default function UserTable() {
     { title: "From", width: 150, dataIndex: "from", key: "from" },
     {
       title: "Message",
-      key: "text",
+      key: "message",
       render: (_: string, record: MessageType) => {
-        return record.type == 'text' ? record.text?.body : record.image?.caption
+        return record.type == 'text' ? record.message.body : record.message.caption
       }
     },
     {

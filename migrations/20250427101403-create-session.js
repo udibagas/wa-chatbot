@@ -2,43 +2,40 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("Messages", {
+    await queryInterface.createTable("Sessions", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      mid: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       from: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      timestamp: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      type: {
-        type: Sequelize.ENUM("text", "image", "location"),
-        allowNull: false,
-      },
-      message: {
-        type: Sequelize.JSON,
-        allowNull: false,
-      },
-      mediaUrl: {
+      currentState: {
         type: Sequelize.STRING,
+        allowNull: false,
+      },
+      context: {
+        type: Sequelize.JSON,
+      },
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
       },
       createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
       },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("Messages");
+    await queryInterface.dropTable("Sessions");
   },
 };
