@@ -12,7 +12,9 @@ module.exports = (sequelize, DataTypes) => {
         phoneNumber: this.from,
         type: "text",
         message: "Jawaban tidak sesuai, silakan coba lagi.",
-      });
+      })
+        .then(() => console.log("Invalid response sent successfully"))
+        .catch((err) => console.error("Error sending invalid response:", err));
     }
   }
 
