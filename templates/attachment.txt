@@ -1,1 +1,3 @@
-Lampirkan gambar kejadian atau aduan. Lampiran bisa lebih dari 1 gambar.
+Lampirkan gambar kejadian atau aduan. 
+Lampiran bisa lebih dari 1 gambar. 
+Balas dengan "end" jika Anda telah melampirkan semua gambar.

@@ -72,10 +72,8 @@ module.exports = (sequelize, DataTypes) => {
 
   Message.afterCreate(async (message) => {
     if (message.type === "image") {
-      message
-        .downloadMedia()
-        .then(() => console.log("Image downloaded successfully"))
-        .catch((err) => console.error("Error downloading image:", err));
+      await message.downloadMedia();
+      await message.reload();
     }
 
     // Cari session yang masih aktif atau create session
@@ -179,12 +177,30 @@ module.exports = (sequelize, DataTypes) => {
       }
 
       currentState = "location";
-      updatedContext.location = location;
+      updatedContext.location = message.message;
+      message.sendResponse("attachment");
     }
 
     if (session.currentState === "location") {
-      // TODO: get attachment and save to database
-      active = false;
+      if (message.type !== "image") {
+        session.sendInvalidResponse();
+        return;
+      }
+
+      currentState = "attachment";
+      updatedContext.attachments = [];
+      updatedContext.attachments.push(message.mediaUrl);
+    }
+
+    if (session.currentState === "attachment") {
+      // attach more images
+      if (message.type === "image") {
+        updatedContext.attachments = session.context.attachments || [];
+        updatedContext.attachments.push(message.mediaUrl);
+      } else {
+        // end session
+        active = false;
+      }
     }
 
     await session.update({
@@ -199,13 +215,15 @@ module.exports = (sequelize, DataTypes) => {
     await session.reload();
 
     if (!active) {
-      const { type, title, description, location, priority } = session.context;
+      const { type, title, description, attachments, location, priority } =
+        session.context;
 
       await sequelize.models.Complaint.create({
         from,
         type,
         title,
         description,
+        attachments,
         location,
         priority,
       });

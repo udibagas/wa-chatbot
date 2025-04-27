@@ -31,6 +31,10 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
+      attachments: {
+        type: Sequelize.JSON,
+        allowNull: true,
+      },
       location: {
         type: Sequelize.JSON,
         allowNull: false,

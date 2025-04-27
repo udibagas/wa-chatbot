@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       title: DataTypes.STRING,
       description: DataTypes.TEXT,
+      attachments: DataTypes.JSON,
       location: DataTypes.JSON,
       status: DataTypes.STRING,
       priority: DataTypes.STRING,
