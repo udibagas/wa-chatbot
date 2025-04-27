@@ -47,41 +47,70 @@ module.exports = (sequelize, DataTypes) => {
           text: "Selamat Datang!",
         },
         body: {
-          text: "Selamat datang di layanan pengaduan kami. Apa yang ingin Anda laporkan?",
-        },
-        footer: {
-          text: "FOOTER_TEXT",
+          text: "Selamat datang di layanan pengaduan kami. Apa yang ingin Anda adukan?",
         },
         action: {
-          button: "BUTTON_TEXT",
+          button: "Pilih Jenis Aduan",
           sections: [
             {
-              title: "SECTION_1_TITLE",
               rows: [
                 {
-                  id: "SECTION_1_ROW_1_ID",
-                  title: "SECTION_1_ROW_1_TITLE",
-                  description: "SECTION_1_ROW_1_DESCRIPTION",
+                  id: "accident",
+                  title: "Kecelakaan",
                 },
                 {
-                  id: "SECTION_1_ROW_2_ID",
-                  title: "SECTION_1_ROW_2_TITLE",
-                  description: "SECTION_1_ROW_2_DESCRIPTION",
+                  id: "criminal",
+                  title: "Tindak Kriminalitas",
+                },
+                {
+                  id: "environment",
+                  title: "Masalah Lingkungan",
+                },
+                {
+                  id: "infrasrtucture",
+                  title: "Masalah Infrastruktur",
+                },
+                {
+                  id: "other",
+                  title: "Lainnya",
                 },
               ],
             },
+          ],
+        },
+      };
+
+      wa.messages.interactive(list, this.from);
+    }
+
+    sendPriority() {
+      const wa = useWa();
+
+      const list = {
+        type: "list",
+        body: {
+          text: "Tentukan prioritas aduan Anda:",
+        },
+        action: {
+          button: "Pilih Prioritas",
+          sections: [
             {
-              title: "SECTION_2_TITLE",
               rows: [
                 {
-                  id: "SECTION_2_ROW_1_ID",
-                  title: "SECTION_2_ROW_1_TITLE",
-                  description: "SECTION_2_ROW_1_DESCRIPTION",
+                  id: "low",
+                  title: "Rendah",
                 },
                 {
-                  id: "SECTION_2_ROW_2_ID",
-                  title: "SECTION_2_ROW_2_TITLE",
-                  description: "SECTION_2_ROW_2_DESCRIPTION",
+                  id: "medium",
+                  title: "Sedang",
+                },
+                {
+                  id: "high",
+                  title: "Tinggi",
+                },
+                {
+                  id: "critical",
+                  title: "Kritis",
                 },
               ],
             },
@@ -158,23 +187,12 @@ module.exports = (sequelize, DataTypes) => {
     const updatedContext = {};
 
     if (session.currentState === "initiated") {
-      if (message.type !== "text") {
+      if (message.type !== "interactive") {
         session.sendInvalidResponse();
         return;
       }
 
-      const type = {
-        1: "accident",
-        2: "criminal",
-        3: "environment",
-        4: "infrastucture",
-        5: "other",
-      }[message.message.body];
-
-      if (!type) {
-        session.sendInvalidResponse();
-        return;
-      }
+      const type = message.message.list_reply.id;
 
       currentState = "type";
       updatedContext.type = type;
@@ -200,29 +218,17 @@ module.exports = (sequelize, DataTypes) => {
 
       currentState = "description";
       updatedContext.description = message.message.body;
-      message.sendResponse("priority");
+      message.sendPriority();
     }
 
     if (session.currentState === "description") {
-      if (message.type !== "text") {
-        session.sendInvalidResponse();
-        return;
-      }
-
-      const priority = {
-        1: "low",
-        2: "medium",
-        3: "high",
-        4: "urgent",
-      }[message.message.body];
-
-      if (!priority) {
+      if (message.type !== "interactive") {
         session.sendInvalidResponse();
         return;
       }
 
       currentState = "priority";
-      updatedContext.priority = priority;
+      updatedContext.priority = message.message.list_reply.id;
       message.sendResponse("location");
     }
 

@@ -41,6 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       text,
       image,
       location,
+      interactive,
     } = value.messages[0];
 
     sequelize.models.Message.create({
@@ -48,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
       from,
       timestamp,
       type,
-      message: text || image || location,
+      message: text || image || location || interactive,
     })
       .then(() => console.log("Message saved successfully"))
       .catch((err) => console.error("Error saving message:", err));
