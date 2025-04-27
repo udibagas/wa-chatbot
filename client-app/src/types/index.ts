@@ -22,7 +22,7 @@ export type PaginatedData<T> = {
   from: number;
   to: number;
   page: number;
-  data: T[];
+  rows: T[];
   total: number;
 };
 

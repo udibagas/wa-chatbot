@@ -31,6 +31,9 @@ module.exports = {
       image: {
         type: Sequelize.JSON,
       },
+      mediaUrl: {
+        type: Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

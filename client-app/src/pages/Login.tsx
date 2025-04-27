@@ -15,7 +15,7 @@ export default function Login() {
   const onFinish: FormProps<LoginValues>['onFinish'] = async (values) => {
     console.log("Success:", values);
     try {
-      await axiosInstance.post("/login", values);
+      await axiosInstance.post("/auth/login", values);
       message.success("Login successful!");
       navigate("/");
     } catch (error) {
@@ -33,7 +33,7 @@ export default function Login() {
 
   return (
     <>
-      <h1 className="mb-8">Login</h1>
+      <h1 className="mb-8 text-3xl">Login</h1>
       <Form
         style={{ width: 300 }}
         variant="filled"
@@ -59,11 +59,12 @@ export default function Login() {
           <Input.Password prefix={<LockOutlined />} placeholder="Password" />
         </Form.Item>
 
-        <Form.Item className="mt-10">
+        <Form.Item style={{ marginTop: 48 }}>
           <Button
             block
             htmlType="submit"
-            style={{ backgroundColor: '#0C74B6', color: 'white', border: 'none' }}
+            color="default"
+            variant="solid"
           >
             Login
           </Button>

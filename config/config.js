@@ -1,10 +1,14 @@
+require("dotenv").config();
+
 const config = {
   development: {
-    username: "postgres",
-    password: "postgres",
-    database: "wa_chatbot",
-    host: "127.0.0.1",
+    username: process.env.PGUSER || "postgres",
+    password: process.env.PGPASSWORD || "postgres",
+    database: process.env.PGDATABASE || "wa_chatbot",
+    host: process.env.PGHOST || "localhost",
     dialect: "postgres",
+    port: +process.env.PGPORT || 5432,
+    // logging: true,
   },
   test: {
     username: "postgres",
@@ -18,6 +22,7 @@ const config = {
     password: process.env.PGPASSWORD,
     database: process.env.PGDATABASE,
     host: process.env.PGHOST,
+    port: +process.env.PGPORT || 5432,
     dialect: "postgres",
     logging: false,
   },

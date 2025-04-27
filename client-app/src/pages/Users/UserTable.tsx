@@ -50,7 +50,7 @@ export default function UserTable() {
 
   return (
     <>
-      <PageHeader title="Manage User">
+      <PageHeader title="Manage Users">
         <AddButton label="Create New User" onClick={handleAdd} />
         <Input.Search
           placeholder="Search"

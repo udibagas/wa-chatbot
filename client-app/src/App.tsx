@@ -1,28 +1,48 @@
-import { BrowserRouter, Route, Routes } from 'react-router'
+import { createBrowserRouter, redirect, RouterProvider } from 'react-router'
 import { lazy, Suspense } from 'react'
+import Loading from './components/Loading'
+import { axiosInstance } from './lib/api'
 
 const MainLayout = lazy(() => import('./layouts/MainLayout'))
-const Dashboard = lazy(() => import('./pages/Dashboard'))
+const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'))
 const Login = lazy(() => import('./pages/Login'))
 const AuthLayout = lazy(() => import('./layouts/AuthLayout'))
-const User = lazy(() => import('./pages/Users'))
+const Users = lazy(() => import('./pages/Users/Users'))
+
+const authLoader = async () => {
+  try {
+    const { data: user } = await axiosInstance.get('/auth/me');
+    return { user }
+  } catch (error: unknown) {
+    console.error(error);
+    return redirect('/login');
+  }
+}
+
+const router = createBrowserRouter([
+  {
+    element: <MainLayout />,
+    loader: authLoader,
+    hydrateFallbackElement: <Loading />,
+    children: [
+      { index: true, element: <Dashboard /> },
+      { path: '/users', element: <Users /> },
+      { path: '*', element: <div>404 Not Found</div> },
+    ],
+  },
+  {
+    path: '/login',
+    element: <AuthLayout />,
+    children: [
+      { index: true, element: <Login /> },
+    ],
+  },
+])
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Routes>
-          <Route element={<MainLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="/users" element={<User />} />
-            <Route path="*" element={<div>404 Not Found</div>} />
-          </Route>
-
-          <Route path="/login" element={<AuthLayout />}>
-            <Route index element={<Login />} />
-          </Route>
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+    <Suspense fallback={<Loading />}>
+      <RouterProvider router={router} />
+    </Suspense>
   )
 }

@@ -1,4 +1,4 @@
-import { PaginatedData, RecursivePartial } from "../types";
+import { PaginatedData } from "../types";
 import { Table } from "antd";
 import { useDataTableContext } from "../hooks/useDataTable";
 import { JSX } from "react";
@@ -15,7 +15,7 @@ interface DataTableProps<T> {
 }
 
 export default function DataTable<T extends { id: number }>({ columns }: DataTableProps<T>) {
-  const { useFetch, handleEdit, setPageSize, setCurrentPage, currentPage } = useDataTableContext()
+  const { useFetch, setPageSize, setCurrentPage, currentPage } = useDataTableContext()
   const { isPending, data } = useFetch<PaginatedData<T>>();
 
   return (
@@ -24,7 +24,7 @@ export default function DataTable<T extends { id: number }>({ columns }: DataTab
       loading={isPending}
       size="small"
       columns={columns}
-      dataSource={data?.data ?? []}
+      dataSource={data?.rows ?? []}
       rowKey="id"
       pagination={{
         size: "small",
@@ -36,11 +36,6 @@ export default function DataTable<T extends { id: number }>({ columns }: DataTab
           setPageSize(pageSize);
           setCurrentPage(page);
         },
-      }}
-      onRow={(record: T) => {
-        return {
-          onDoubleClick: () => handleEdit(record as RecursivePartial<T>),
-        };
       }}
     />
   )
