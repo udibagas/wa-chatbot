@@ -6,6 +6,7 @@ import { axiosInstance } from './lib/api'
 const MainLayout = lazy(() => import('./layouts/MainLayout'))
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'))
 const Notification = lazy(() => import('./pages/Notification/Notification'))
+const Message = lazy(() => import('./pages/Messages/Message'))
 const Login = lazy(() => import('./pages/Login'))
 const AuthLayout = lazy(() => import('./layouts/AuthLayout'))
 const Users = lazy(() => import('./pages/Users/Users'))
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Dashboard /> },
       { path: '/users', element: <Users /> },
+      { path: '/messages', element: <Message /> },
       { path: '/notifications', element: <Notification /> },
       { path: '*', element: <div>404 Not Found</div> },
     ],
