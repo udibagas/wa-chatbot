@@ -22,7 +22,7 @@ module.exports = {
         allowNull: false,
       },
       type: {
-        type: Sequelize.ENUM("text", "image", "location"),
+        type: Sequelize.ENUM("text", "image", "location", "interactive"),
         allowNull: false,
       },
       message: {
