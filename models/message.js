@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
 
       const ymd = moment().format("YYYY/MM/DD");
       fs.mkdirSync(`./media/${ymd}`, { recursive: true });
-      const path = `media/${ymd}/${this.image.id}.jpg`;
+      const path = `media/${ymd}/${this.message.id}.jpg`;
       res.data.pipe(fs.createWriteStream(path));
       await this.update({ mediaUrl: path });
       return path;
