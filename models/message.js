@@ -214,12 +214,12 @@ module.exports = (sequelize, DataTypes) => {
 
     await session.reload();
 
-    if (!active) {
+    if (!session.active) {
       const { type, title, description, attachments, location, priority } =
         session.context;
 
       await sequelize.models.Complaint.create({
-        from,
+        from: session.from,
         type,
         title,
         description,
