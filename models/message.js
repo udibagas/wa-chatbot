@@ -1,11 +1,38 @@
 "use strict";
 const { Model } = require("sequelize");
 const sendWhatsAppMessage = require("../utils/sendWhatsAppMessage");
+const axios = require("axios");
+const fs = require("fs");
+const moment = require("moment");
 
 module.exports = (sequelize, DataTypes) => {
   class Message extends Model {
     static associate(models) {
       // define association here
+    }
+
+    async downloadMedia() {
+      const { data } = await axios.get(
+        `https://${process.env.WA_BASE_URL}/${process.env.CLOUD_API_VERSION}/${this.image.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.CLOUD_API_ACCESS_TOKEN}`,
+          },
+        }
+      );
+
+      const res = await axios.get(data.url, {
+        responseType: "stream",
+        headers: {
+          Authorization: `Bearer ${process.env.CLOUD_API_ACCESS_TOKEN}`,
+        },
+      });
+
+      const ymd = moment().format("YYYY/MM/DD");
+      fs.mkdirSync(`./media/${ymd}`, { recursive: true });
+      const path = `media/${ymd}/${this.image.id}.jpg`;
+      res.data.pipe(fs.createWriteStream(path));
+      await this.update({ mediaUrl: path });
     }
   }
 
@@ -27,6 +54,18 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Message.afterCreate((message) => {
+    // save image to mediaUrl
+    if (message.type === "image") {
+      message
+        .downloadMedia()
+        .then(() => {
+          console.log("Image downloaded successfully");
+        })
+        .catch((err) => {
+          console.error("Error downloading image:", err);
+        });
+    }
+
     sendWhatsAppMessage({
       message:
         "Terimakasih telah menghubungi kami.\nKami akan segera menindaklanjuti pesan Anda.\n\n*LaporKami*",
