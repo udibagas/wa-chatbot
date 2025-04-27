@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
 
     async downloadMedia() {
       const { data } = await axios.get(
-        `https://${process.env.WA_BASE_URL}/${process.env.CLOUD_API_VERSION}/${this.image.id}`,
+        `https://${process.env.WA_BASE_URL}/${process.env.CLOUD_API_VERSION}/${this.message.id}`,
         {
           headers: {
             Authorization: `Bearer ${process.env.CLOUD_API_ACCESS_TOKEN}`,
