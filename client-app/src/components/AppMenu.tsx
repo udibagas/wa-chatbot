@@ -9,7 +9,7 @@ const menuItems: MenuItem[] = [
   {
     type: 'group',
     key: "main-menu",
-    label: "Main Menu",
+    label: "",
     children: [
       {
         label: <Link to="/">Dashboard</Link>,
@@ -26,13 +26,6 @@ const menuItems: MenuItem[] = [
         key: "/notifications",
         icon: <BellDotIcon />,
       },
-    ],
-  },
-  {
-    type: 'group',
-    key: "master-data",
-    label: "Master Data",
-    children: [
       {
         label: <Link to="/users">Users</Link>,
         key: "/users",
