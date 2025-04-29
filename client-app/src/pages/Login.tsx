@@ -1,5 +1,5 @@
 import { Form, Input, Button, message, FormProps } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { UserOutlined, LockOutlined, LoadingOutlined } from "@ant-design/icons";
 import { AxiosError } from "axios";
 import { AxiosErrorResponseType } from "../types";
 import { axiosInstance } from "../lib/api";
@@ -72,7 +72,7 @@ export default function Login() {
             variant="solid"
             disabled={loading}
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? <LoadingOutlined /> + 'Logging in...' : 'Login'}
           </Button>
         </Form.Item>
       </Form>
