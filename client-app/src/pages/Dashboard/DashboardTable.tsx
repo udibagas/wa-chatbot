@@ -198,6 +198,16 @@ function showDetail(record: ComplaintType) {
             {record.location.name && record.location.name + ', '}
             {record.location.address && record.location.address + ', '}
             Lat: {record.location.latitude}, Long: {record.location.longitude}
+
+            <iframe
+              width="600"
+              height="450"
+              style={{ border: 0 }}
+              className="mt-2"
+              loading="lazy"
+              allowFullScreen
+              src={`https://www.google.com/maps/embed/v1/place?&key=AIzaSyBTh3IZZvgEMfRfAUeMWI4ZoH5qqpYBG-s&q=${record.location.latitude},${record.location.longitude}`}>
+            </iframe>
           </Descriptions.Item>
 
           <Descriptions.Item label="Priority">
