@@ -7,6 +7,23 @@ import { useDataTableContext } from "../../hooks/useDataTable";
 import { ComplaintType } from "./Dashboard";
 import ActionButton from "../../components/buttons/ActionButton";
 
+const colors = {
+  submitted: 'default',
+  in_review: 'warning',
+  in_progress: 'blue',
+  resolved: 'success',
+  rejected: 'error',
+  low: 'default',
+  medium: 'warning',
+  high: 'error',
+  critical: 'black',
+  other: 'default',
+  accident: 'warning',
+  criminal: 'error',
+  environment: 'green',
+  infrastructure: 'blue',
+}
+
 export default function UserTable() {
   const { refreshData, setSearch, setCurrentPage, handleDelete } = useDataTableContext()
 
@@ -25,14 +42,7 @@ export default function UserTable() {
       key: "type",
       width: 100,
       render: (_: string, record: ComplaintType) => {
-        const color = {
-          other: 'default',
-          accident: 'warning',
-          criminal: 'error',
-          environment: 'green',
-          infrastructure: 'blue',
-        }[record.type]
-
+        const color = colors[record.type as keyof typeof colors]
         return <Tag color={color}>{record.type}</Tag>
       }
     },
@@ -56,14 +66,7 @@ export default function UserTable() {
       width: 100,
       align: "center" as const,
       render: (_: string, record: ComplaintType) => {
-        const color = {
-          low: 'default',
-          medium: 'warning',
-          high: 'error',
-          critical: 'black',
-
-        }[record.priority]
-
+        const color = colors[record.priority as keyof typeof colors]
         return <Tag color={color}>{record.priority}</Tag>
       }
     },
@@ -74,14 +77,7 @@ export default function UserTable() {
       width: 100,
       align: "center" as const,
       render: (_: string, record: ComplaintType) => {
-        const color = {
-          submitted: 'default',
-          in_review: 'warning',
-          in_progress: 'blue',
-          resolved: 'success',
-          rejected: 'error',
-        }[record.status];
-
+        const color = colors[record.status as keyof typeof colors]
         return <Tag color={color}>{record.status}</Tag>
       }
     },
@@ -185,7 +181,9 @@ function showDetail(record: ComplaintType) {
           </Descriptions.Item>
 
           <Descriptions.Item label="Type">
-            {record.type}
+            <Tag color={colors[record.type as keyof typeof colors]}>
+              {record.type}
+            </Tag>
           </Descriptions.Item>
 
           <Descriptions.Item label="Title">
@@ -193,17 +191,24 @@ function showDetail(record: ComplaintType) {
           </Descriptions.Item>
 
           <Descriptions.Item label="Description">
-            <div dangerouslySetInnerHTML={{ __html: record.description.replace(/\n/g, '<br />') }} />          </Descriptions.Item>
+            <div dangerouslySetInnerHTML={{ __html: record.description.replace(/\n/g, '<br />') }} />
+          </Descriptions.Item>
+
           <Descriptions.Item label="Priority">
-            {record.priority}
+            <Tag color={colors[record.priority as keyof typeof colors]}>
+              {record.priority}
+            </Tag>
           </Descriptions.Item>
 
           <Descriptions.Item label="Status">
-            {record.status}
+            <Tag color={colors[record.status as keyof typeof colors]}>
+              {record.status}
+            </Tag>
           </Descriptions.Item>
         </Descriptions>
 
-        {record.attachments.length > 0 &&
+        {
+          record.attachments.length > 0 &&
           <div className="flex gap-5 mt-5">
             {record.attachments.map((attachment, index) => {
               return (
@@ -219,7 +224,7 @@ function showDetail(record: ComplaintType) {
             })}
           </div>
         }
-      </div>
+      </div >
     ),
   })
 }
