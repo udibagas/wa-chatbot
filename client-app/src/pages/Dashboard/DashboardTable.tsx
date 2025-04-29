@@ -2,7 +2,7 @@ import moment from "moment";
 import { CheckCircleOutlined, CloseCircleOutlined, DownloadOutlined, EyeOutlined, ReloadOutlined, ShareAltOutlined } from "@ant-design/icons";
 import DataTable from "../../components/DataTable";
 import PageHeader from "../../components/PageHeader";
-import { Descriptions, Image, Input, Modal } from "antd";
+import { Descriptions, Image, Input, Modal, Tag } from "antd";
 import { useDataTableContext } from "../../hooks/useDataTable";
 import { ComplaintType } from "./Dashboard";
 import ActionButton from "../../components/buttons/ActionButton";
@@ -23,7 +23,18 @@ export default function UserTable() {
       title: "Type",
       dataIndex: "type",
       key: "type",
-      width: 100
+      width: 100,
+      render: (_: string, record: ComplaintType) => {
+        const color = {
+          other: 'default',
+          accident: 'warning',
+          criminal: 'error',
+          environment: 'green',
+          infrastructure: 'blue',
+        }[record.type]
+
+        return <Tag color={color}>{record.type}</Tag>
+      }
     },
     {
       title: "Title",
@@ -44,6 +55,17 @@ export default function UserTable() {
       key: "priority",
       width: 100,
       align: "center" as const,
+      render: (_: string, record: ComplaintType) => {
+        const color = {
+          low: 'default',
+          medium: 'warning',
+          high: 'error',
+          critical: 'black',
+
+        }[record.priority]
+
+        return <Tag color={color}>{record.priority}</Tag>
+      }
     },
     {
       title: "Status",
@@ -51,6 +73,17 @@ export default function UserTable() {
       key: "status",
       width: 100,
       align: "center" as const,
+      render: (_: string, record: ComplaintType) => {
+        const color = {
+          submitted: 'default',
+          in_review: 'warning',
+          in_progress: 'blue',
+          resolved: 'success',
+          rejected: 'error',
+        }[record.status];
+
+        return <Tag color={color}>{record.status}</Tag>
+      }
     },
     {
       title: <ReloadOutlined onClick={refreshData} />,
