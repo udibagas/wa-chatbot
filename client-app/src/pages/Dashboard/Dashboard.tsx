@@ -8,7 +8,12 @@ export interface ComplaintType {
   title: string;
   description: string;
   attachments: string[];
-  location: object;
+  location: {
+    latitude: number;
+    longitude: number;
+    name?: string;
+    address?: string;
+  };
   status: "submitted" | "in_review" | "in_progress" | "resolved" | "rejected";
   priority: "low" | "medium" | "high" | "critical";
   createdAt: string;

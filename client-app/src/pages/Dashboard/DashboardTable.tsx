@@ -194,6 +194,12 @@ function showDetail(record: ComplaintType) {
             <div dangerouslySetInnerHTML={{ __html: record.description.replace(/\n/g, '<br />') }} />
           </Descriptions.Item>
 
+          <Descriptions.Item label="Location">
+            {record.location.name && record.location.name + ', '}
+            {record.location.address && record.location.address + ', '}
+            Lat: {record.location.latitude}, Long: {record.location.longitude}
+          </Descriptions.Item>
+
           <Descriptions.Item label="Priority">
             <Tag color={colors[record.priority as keyof typeof colors]}>
               {record.priority}
