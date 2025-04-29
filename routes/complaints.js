@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { auth } = require("../middlewares/auth.middleware");
 const { Complaint } = require("../models");
 const router = require("express").Router();
@@ -5,7 +6,7 @@ const router = require("express").Router();
 router
   .use(auth)
   .get("/", async (req, res, next) => {
-    const { page = 1, pageSize: limit = 10 } = req.query;
+    const { page = 1, pageSize: limit = 10, search } = req.query;
     const offset = (page - 1) * limit;
 
     const options = {
@@ -13,6 +14,17 @@ router
       limit: +limit,
       offset,
     };
+
+    if (search) {
+      options.where = {
+        [Op.or]: [
+          { id: search },
+          { from: { [Op.iLike]: `%${search}%` } },
+          { title: { [Op.iLike]: `%${search}%` } },
+          { description: { [Op.iLike]: `%${search}%` } },
+        ],
+      };
+    }
 
     try {
       const { count: total, rows } = await Complaint.findAndCountAll(options);
