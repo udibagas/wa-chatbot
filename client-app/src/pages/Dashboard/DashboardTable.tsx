@@ -41,6 +41,7 @@ export default function UserTable() {
       dataIndex: "type",
       key: "type",
       width: 100,
+      align: "center" as const,
       render: (_: string, record: ComplaintType) => {
         const color = colors[record.type as keyof typeof colors]
         return <Tag color={color}>{record.type}</Tag>
@@ -63,9 +64,14 @@ export default function UserTable() {
       title: "Location",
       dataIndex: "location",
       key: "location",
-      render: (_: string, record: ComplaintType) => {
-        return record.location.name || record.location.address || `${record.location.latitude}, ${record.location.longitude}`
-      }
+      render: (_: string, record: ComplaintType) => (
+        <a href={`https://www.google.com/maps?q=${record.location.latitude},${record.location.longitude}`} target="_blank">
+          {record.location.name && record.location.name + ', '}
+          {record.location.address && record.location.address + ', '}
+          Lat: {record.location.latitude}, Long: {record.location.longitude}
+        </a>
+      )
+
     },
     {
       title: "Priority",
@@ -206,16 +212,10 @@ function showDetail(record: ComplaintType) {
             {record.location.name && record.location.name + ', '}
             {record.location.address && record.location.address + ', '}
             Lat: {record.location.latitude}, Long: {record.location.longitude}
-
-            <iframe
-              width="600"
-              height="450"
-              style={{ border: 0 }}
-              className="mt-2"
-              loading="lazy"
-              allowFullScreen
-              src={`https://www.google.com/maps/embed/v1/place?&key=AIzaSyBTh3IZZvgEMfRfAUeMWI4ZoH5qqpYBG-s&q=${record.location.latitude},${record.location.longitude}`}>
-            </iframe>
+            <br />
+            <a className="py-1 px-3 border border-blue-500 rounded-md mt-4 inline-block" href={`https://www.google.com/maps?q=${record.location.latitude},${record.location.longitude}`} target="_blank">
+              Show On Google Maps
+            </a>
           </Descriptions.Item>
 
           <Descriptions.Item label="Priority">
