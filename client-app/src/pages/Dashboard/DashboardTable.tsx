@@ -60,6 +60,14 @@ export default function UserTable() {
       }
     },
     {
+      title: "Location",
+      dataIndex: "location",
+      key: "location",
+      render: (_: string, record: ComplaintType) => {
+        return record.location.name || record.location.address || `${record.location.latitude}, ${record.location.longitude}`
+      }
+    },
+    {
       title: "Priority",
       dataIndex: "priority",
       key: "priority",
