@@ -72,7 +72,8 @@ export default function Login() {
             variant="solid"
             disabled={loading}
           >
-            {loading ? <LoadingOutlined /> + 'Logging in...' : 'Login'}
+            {loading && <LoadingOutlined />}
+            {loading ? 'Logging in...' : 'Login'}
           </Button>
         </Form.Item>
       </Form>
