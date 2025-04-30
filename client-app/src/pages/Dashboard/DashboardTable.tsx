@@ -4,7 +4,7 @@ import DataTable from "../../components/DataTable";
 import PageHeader from "../../components/PageHeader";
 import { Descriptions, Dropdown, Image, Input, MenuProps, Modal, Tag } from "antd";
 import { useDataTableContext } from "../../hooks/useDataTable";
-import { ComplaintType } from "./Dashboard";
+import { ComplaintType, Priority, Status } from "./Dashboard";
 import ActionButton from "../../components/buttons/ActionButton";
 import { axiosInstance } from "../../lib/api";
 
@@ -49,7 +49,7 @@ const dictionary = {
 export default function ComplaintTable() {
   const { refreshData, setSearch, setCurrentPage, handleDelete } = useDataTableContext()
 
-  function updateStatus(id: number, status: string) {
+  function updateStatus(id: number, status: Status) {
     Modal.confirm({
       title: 'Konfirmasi',
       content: 'Anda yakin akan mengubah status aduan?',
@@ -63,7 +63,7 @@ export default function ComplaintTable() {
     })
   }
 
-  function updatePriority(id: number, priority: string) {
+  function updatePriority(id: number, priority: Priority) {
     Modal.confirm({
       title: 'Konfirmasi',
       content: 'Anda yakin akan mengubah status aduan?',
@@ -132,8 +132,8 @@ export default function ComplaintTable() {
       render: (_: string, record: ComplaintType) => {
         const color = colors[record.priority as keyof typeof colors]
         const menuItems: MenuProps['items'] = []
-        const priorities = ['low', 'medium', 'high', 'critical']
-        priorities.forEach((priority: string) => {
+        const priorities: Priority[] = ['low', 'medium', 'high', 'critical']
+        priorities.forEach((priority: Priority) => {
           if (record.priority !== priority) {
             menuItems!.push({
               key: priority,
@@ -166,8 +166,6 @@ export default function ComplaintTable() {
           menuItems.push({ key: "in_progress", label: dictionary.in_progress, onClick: () => updateStatus(record.id, 'in_progress') })
         } else if (record.status === 'in_progress') {
           menuItems.push({ key: "resolved", label: dictionary.resolved, onClick: () => updateStatus(record.id, 'resolved') })
-        } else if (record.status === 'resolved') {
-          menuItems.push({ key: "rejected", label: dictionary.rejected, onClick: () => updateStatus(record.id, 'rejected') })
         }
 
         return (
@@ -247,29 +245,29 @@ function showDetail(record: ComplaintType) {
             {record.id}
           </Descriptions.Item>
 
-          <Descriptions.Item label="Time">
+          <Descriptions.Item label="Waktu">
             {moment(record.createdAt).format("DD-MMM-YYYY HH:mm:ss")}
           </Descriptions.Item>
 
-          <Descriptions.Item label="From">
+          <Descriptions.Item label="Pengadu">
             {record.from}
           </Descriptions.Item>
 
-          <Descriptions.Item label="Type">
+          <Descriptions.Item label="Jenis Aduan">
             <Tag color={colors[record.type as keyof typeof colors]}>
-              {record.type}
+              {dictionary[record.type]}
             </Tag>
           </Descriptions.Item>
 
-          <Descriptions.Item label="Title">
+          <Descriptions.Item label="Judul Aduan">
             {record.title}
           </Descriptions.Item>
 
-          <Descriptions.Item label="Description">
+          <Descriptions.Item label="Rincian Aduan">
             <div dangerouslySetInnerHTML={{ __html: record.description.replace(/\n/g, '<br />') }} />
           </Descriptions.Item>
 
-          <Descriptions.Item label="Location">
+          <Descriptions.Item label="Lokasi">
             {record.location.name && record.location.name + ', '}
             {record.location.address && record.location.address + ', '}
             Lat: {record.location.latitude}, Long: {record.location.longitude}
@@ -280,15 +278,15 @@ function showDetail(record: ComplaintType) {
             </a>
           </Descriptions.Item>
 
-          <Descriptions.Item label="Priority">
+          <Descriptions.Item label="Prioritas">
             <Tag color={colors[record.priority as keyof typeof colors]}>
-              {record.priority}
+              {dictionary[record.priority]}
             </Tag>
           </Descriptions.Item>
 
           <Descriptions.Item label="Status">
             <Tag color={colors[record.status as keyof typeof colors]}>
-              {record.status}
+              {dictionary[record.status]}
             </Tag>
           </Descriptions.Item>
         </Descriptions>

@@ -1,21 +1,27 @@
 import DashboardTable from "./DashboardTable";
 import { DataTableProvider } from "../../providers/DataTableProvider";
 
+export type Location = {
+  latitude: number;
+  longitude: number;
+  name?: string;
+  address?: string;
+}
+
+export type Type = "accident" | "congestion" | "extortion" | "environment" | "infrastructure" | "criminal" | "other";
+export type Status = "submitted" | "in_review" | "in_progress" | "resolved" | "rejected";
+export type Priority = "low" | "medium" | "high" | "critical";
+
 export interface ComplaintType {
   id: number;
   from: string;
-  type: "accident" | "congestion" | "extortion" | "environment" | "infrastructure" | "other";
+  type: Type;
   title: string;
   description: string;
   attachments: string[];
-  location: {
-    latitude: number;
-    longitude: number;
-    name?: string;
-    address?: string;
-  };
-  status: "submitted" | "in_review" | "in_progress" | "resolved" | "rejected";
-  priority: "low" | "medium" | "high" | "critical";
+  location: Location;
+  status: Status;
+  priority: Priority;
   createdAt: string;
   updatedAt: string;
 }
