@@ -267,8 +267,10 @@ module.exports = (sequelize, DataTypes) => {
     if (session.currentState === "attachment") {
       // attach more images
       if (message.type === "image") {
-        updatedContext.attachments = session.context.attachments || [];
-        updatedContext.attachments.push(message.mediaUrl);
+        updatedContext.attachments = [
+          ...session.context.attachments,
+          message.mediaUrl,
+        ];
         message.sendConfirmation();
       } else {
         // end session
