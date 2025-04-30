@@ -241,6 +241,17 @@ module.exports = (sequelize, DataTypes) => {
       message.sendResponse("location");
     }
 
+    if (session.currentState === "description") {
+      if (message.type !== "location") {
+        session.sendInvalidResponse();
+        return;
+      }
+
+      currentState = "location";
+      updatedContext.location = message.message;
+      message.sendResponse("location");
+    }
+
     if (session.currentState === "location") {
       if (message.type !== "image") {
         session.sendInvalidResponse();
