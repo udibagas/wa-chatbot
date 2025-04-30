@@ -59,16 +59,12 @@ module.exports = (sequelize, DataTypes) => {
                   title: "Kecelakaan",
                 },
                 {
-                  id: "criminal",
-                  title: "Tindak Kriminalitas",
+                  id: "congestion",
+                  title: "Kemacetan",
                 },
                 {
-                  id: "environment",
-                  title: "Masalah Lingkungan",
-                },
-                {
-                  id: "infrasrtucture",
-                  title: "Masalah Infrastruktur",
+                  id: "extortion",
+                  title: "Pungli",
                 },
                 {
                   id: "other",
@@ -119,6 +115,30 @@ module.exports = (sequelize, DataTypes) => {
       };
 
       wa.messages.interactive(list, this.from);
+    }
+
+    sendConfirmation() {
+      const wa = useWa();
+
+      const replyBtn = {
+        type: "button",
+        body: {
+          text: 'Gambar telah kami terima. Tap "Akhiri" untuk mengakhiri sesi ini atau kirimkan gambar lain untuk melanjutkan.',
+        },
+        action: {
+          buttons: [
+            {
+              type: "reply",
+              reply: {
+                id: "end",
+                title: "Akhiri",
+              },
+            },
+          ],
+        },
+      };
+
+      wa.messages.interactive(replyBtn, this.from);
     }
 
     sendResponse(template) {
@@ -218,29 +238,7 @@ module.exports = (sequelize, DataTypes) => {
 
       currentState = "description";
       updatedContext.description = message.message.body;
-      message.sendPriority();
-    }
-
-    if (session.currentState === "description") {
-      if (message.type !== "interactive") {
-        session.sendInvalidResponse();
-        return;
-      }
-
-      currentState = "priority";
-      updatedContext.priority = message.message.list_reply.id;
       message.sendResponse("location");
-    }
-
-    if (session.currentState === "priority") {
-      if (message.type !== "location") {
-        session.sendInvalidResponse();
-        return;
-      }
-
-      currentState = "location";
-      updatedContext.location = message.message;
-      message.sendResponse("attachment");
     }
 
     if (session.currentState === "location") {
@@ -252,6 +250,7 @@ module.exports = (sequelize, DataTypes) => {
       currentState = "attachment";
       updatedContext.attachments = [];
       updatedContext.attachments.push(message.mediaUrl);
+      this.sendConfirmation();
     }
 
     if (session.currentState === "attachment") {
@@ -259,6 +258,7 @@ module.exports = (sequelize, DataTypes) => {
       if (message.type === "image") {
         updatedContext.attachments = session.context.attachments || [];
         updatedContext.attachments.push(message.mediaUrl);
+        this.sendConfirmation();
       } else {
         // end session
         active = false;
@@ -277,7 +277,7 @@ module.exports = (sequelize, DataTypes) => {
     await session.reload();
 
     if (!session.active) {
-      const { type, title, description, attachments, location, priority } =
+      const { type, title, description, attachments, location } =
         session.context;
 
       await sequelize.models.Complaint.create({
@@ -287,7 +287,6 @@ module.exports = (sequelize, DataTypes) => {
         description,
         attachments,
         location,
-        priority,
       });
 
       message.sendResponse("thankyou");

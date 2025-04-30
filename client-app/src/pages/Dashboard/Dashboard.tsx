@@ -4,7 +4,7 @@ import { DataTableProvider } from "../../providers/DataTableProvider";
 export interface ComplaintType {
   id: number;
   from: string;
-  type: string;
+  type: "accident" | "congestion" | "extortion" | "environment" | "infrastructure" | "other";
   title: string;
   description: string;
   attachments: string[];

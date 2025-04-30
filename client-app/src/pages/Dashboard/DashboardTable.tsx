@@ -1,11 +1,12 @@
 import moment from "moment";
-import { CheckCircleOutlined, CloseCircleOutlined, DownloadOutlined, EyeOutlined, ReloadOutlined, ShareAltOutlined } from "@ant-design/icons";
+import { AimOutlined, CheckCircleOutlined, CloseCircleOutlined, FileSearchOutlined, ReloadOutlined } from "@ant-design/icons";
 import DataTable from "../../components/DataTable";
 import PageHeader from "../../components/PageHeader";
-import { Descriptions, Image, Input, Modal, Tag } from "antd";
+import { Descriptions, Dropdown, Image, Input, MenuProps, Modal, Tag } from "antd";
 import { useDataTableContext } from "../../hooks/useDataTable";
 import { ComplaintType } from "./Dashboard";
 import ActionButton from "../../components/buttons/ActionButton";
+import { axiosInstance } from "../../lib/api";
 
 const colors = {
   submitted: 'default',
@@ -18,37 +19,86 @@ const colors = {
   high: 'error',
   critical: 'black',
   other: 'default',
-  accident: 'warning',
+  accident: 'error',
   criminal: 'error',
   environment: 'green',
   infrastructure: 'blue',
+  congestion: 'warning',
+  extortion: 'default',
 }
 
-export default function UserTable() {
+const dictionary = {
+  submitted: 'Diajukan',
+  in_review: 'Dalam Tinjauan',
+  in_progress: 'Tindak Lanjut',
+  resolved: 'Selesai',
+  rejected: 'Ditolak',
+  low: 'Rendah',
+  medium: 'Sedang',
+  high: 'Tinggi',
+  critical: 'Kritis',
+  other: 'Lainnya',
+  accident: 'Kecelakaan',
+  criminal: 'Tindak Kriminal',
+  environment: 'Masalah Lingkungan',
+  infrastructure: 'Masalah Infrastruktur',
+  congestion: 'Kemacetan',
+  extortion: 'Pungli',
+}
+
+export default function ComplaintTable() {
   const { refreshData, setSearch, setCurrentPage, handleDelete } = useDataTableContext()
+
+  function updateStatus(id: number, status: string) {
+    Modal.confirm({
+      title: 'Konfirmasi',
+      content: 'Anda yakin akan mengubah status aduan?',
+      okText: 'Ya',
+      cancelText: 'Tidak',
+      onOk: () => {
+        axiosInstance.put(`/api/complaints/${id}`, { status }).then(() => {
+          refreshData();
+        });
+      },
+    })
+  }
+
+  function updatePriority(id: number, priority: string) {
+    Modal.confirm({
+      title: 'Konfirmasi',
+      content: 'Anda yakin akan mengubah status aduan?',
+      okText: 'Ya',
+      cancelText: 'Tidak',
+      onOk: () => {
+        axiosInstance.put(`/api/complaints/${id}`, { priority }).then(() => {
+          refreshData();
+        });
+      },
+    })
+  }
 
   const columns = [
     { title: "ID", width: 60, dataIndex: "id", key: "id" },
     {
-      title: "Time", width: 160, dataIndex: "createdAt", key: "createdAt", render: (_: string, record: ComplaintType) => {
+      title: "Waktu", width: 160, dataIndex: "createdAt", key: "createdAt", render: (_: string, record: ComplaintType) => {
         const date = new Date(record.createdAt)
         return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
       }
     },
-    { title: "From", width: 150, dataIndex: "from", key: "from" },
+    { title: "Pengadu", width: 150, dataIndex: "from", key: "from" },
     {
-      title: "Type",
+      title: "Jenis Aduan",
       dataIndex: "type",
       key: "type",
-      width: 100,
+      width: 150,
       align: "center" as const,
       render: (_: string, record: ComplaintType) => {
         const color = colors[record.type as keyof typeof colors]
-        return <Tag color={color}>{record.type}</Tag>
+        return <Tag color={color}>{dictionary[record.type]}</Tag>
       }
     },
     {
-      title: "Title",
+      title: "Judul Aduan",
       dataIndex: "title",
       key: "title",
       render: (_: string, record: ComplaintType) => {
@@ -61,7 +111,7 @@ export default function UserTable() {
       }
     },
     {
-      title: "Location",
+      title: "Lokasi",
       dataIndex: "location",
       key: "location",
       render: (_: string, record: ComplaintType) => (
@@ -74,25 +124,57 @@ export default function UserTable() {
 
     },
     {
-      title: "Priority",
+      title: "Prioritas",
       dataIndex: "priority",
       key: "priority",
       width: 100,
       align: "center" as const,
       render: (_: string, record: ComplaintType) => {
         const color = colors[record.priority as keyof typeof colors]
-        return <Tag color={color}>{record.priority}</Tag>
+        const menuItems: MenuProps['items'] = []
+        const priorities = ['low', 'medium', 'high', 'critical']
+        priorities.forEach((priority: string) => {
+          if (record.priority !== priority) {
+            menuItems!.push({
+              key: priority,
+              label: dictionary[priority as keyof typeof dictionary],
+              onClick: () => updatePriority(record.id, priority)
+            })
+          }
+        })
+
+        return (
+          <Dropdown menu={{ items: menuItems }} placement="bottom" arrow>
+            <Tag color={color}>{dictionary[record.priority]}</Tag>
+          </Dropdown>
+        )
       }
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      width: 100,
+      width: 120,
       align: "center" as const,
       render: (_: string, record: ComplaintType) => {
         const color = colors[record.status as keyof typeof colors]
-        return <Tag color={color}>{record.status}</Tag>
+        const menuItems: MenuProps['items'] = []
+
+        if (record.status === 'submitted') {
+          menuItems.push({ key: "in_review", label: dictionary.in_review, onClick: () => updateStatus(record.id, 'in_review') })
+        } else if (record.status === 'in_review') {
+          menuItems.push({ key: "in_progress", label: dictionary.in_progress, onClick: () => updateStatus(record.id, 'in_progress') })
+        } else if (record.status === 'in_progress') {
+          menuItems.push({ key: "resolved", label: dictionary.resolved, onClick: () => updateStatus(record.id, 'resolved') })
+        } else if (record.status === 'resolved') {
+          menuItems.push({ key: "rejected", label: dictionary.rejected, onClick: () => updateStatus(record.id, 'rejected') })
+        }
+
+        return (
+          <Dropdown menu={{ items: menuItems }} placement="bottom" arrow>
+            <Tag color={color}>{dictionary[record.status]}</Tag>
+          </Dropdown>
+        )
       }
     },
     {
@@ -108,40 +190,16 @@ export default function UserTable() {
             [
               {
                 key: "view",
-                icon: <EyeOutlined />,
-                label: 'View',
+                icon: <FileSearchOutlined />,
+                label: 'Lihat Rician',
                 onClick: () => showDetail(record)
               },
               {
                 key: "resolve",
                 icon: <CheckCircleOutlined />,
-                label: 'Resolve',
+                label: 'Selesaikan',
                 onClick: () => {
                   console.log('Resolve complaint', record);
-                }
-              },
-              {
-                key: "escalate",
-                icon: <CheckCircleOutlined />,
-                label: 'Escalate',
-                onClick: () => {
-                  console.log('Escalate complaint', record);
-                }
-              },
-              {
-                key: "download",
-                icon: <DownloadOutlined />,
-                label: 'Download',
-                onClick: () => {
-                  console.log('Download complaint', record);
-                }
-              },
-              {
-                key: "share",
-                icon: <ShareAltOutlined />,
-                label: 'Share',
-                onClick: () => {
-                  console.log('Share complaint', record);
                 }
               },
             ]
@@ -153,9 +211,9 @@ export default function UserTable() {
 
   return (
     <>
-      <PageHeader title="Manage Complaints">
+      <PageHeader title="Kelola Aduan">
         <Input.Search
-          placeholder="Search"
+          placeholder="Cari"
           allowClear
           onSearch={(value) => {
             setCurrentPage(1)
@@ -172,7 +230,10 @@ export default function UserTable() {
 
 function showDetail(record: ComplaintType) {
   Modal.info({
-    title: "Log Details",
+    title: "Rincian Aduan",
+    centered: true,
+    maskClosable: true,
+    keyboard: true,
     closable: true,
     okText: "Close",
     okButtonProps: {
@@ -213,8 +274,9 @@ function showDetail(record: ComplaintType) {
             {record.location.address && record.location.address + ', '}
             Lat: {record.location.latitude}, Long: {record.location.longitude}
             <br />
-            <a className="py-1 px-3 border border-blue-500 rounded-md mt-4 inline-block" href={`https://www.google.com/maps?q=${record.location.latitude},${record.location.longitude}`} target="_blank">
-              Show On Google Maps
+            <a className="py-1 px-3 border border-blue-500 rounded-md mt-2 inline-block" href={`https://www.google.com/maps?q=${record.location.latitude},${record.location.longitude}`} target="_blank">
+              <AimOutlined className="mr-2" />
+              Lihat di Google Maps
             </a>
           </Descriptions.Item>
 

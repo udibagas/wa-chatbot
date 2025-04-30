@@ -23,11 +23,11 @@ export default function MainLayout() {
 
   function logout() {
     Modal.confirm({
-      title: 'Confirmation',
-      content: 'Are you sure you want to logout?',
+      title: 'Konfirmasi',
+      content: 'Anda yakin akan keluar?',
       icon: <LogoutOutlined />,
-      okText: 'Yes',
-      cancelText: 'No',
+      okText: 'Ya',
+      cancelText: 'Tidak',
       onOk: () => {
         axiosInstance.post('/auth/logout').then(() => {
           navigate('/login');

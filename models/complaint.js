@@ -12,7 +12,15 @@ module.exports = (sequelize, DataTypes) => {
   Complaint.init(
     {
       from: DataTypes.STRING,
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM(
+        "accident",
+        "criminal",
+        "environment",
+        "infrastructure",
+        "congestion",
+        "extortion",
+        "other"
+      ),
       title: DataTypes.STRING,
       description: DataTypes.TEXT,
       attachments: DataTypes.JSON,

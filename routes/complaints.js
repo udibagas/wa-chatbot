@@ -40,17 +40,35 @@ router
     }
   })
 
-  .delete("/:id", async (req, res, next) => {
+  .put("/:id", async (req, res, next) => {
     try {
-      const user = await Complaint.findByPk(req.params.id);
+      const complaint = await Complaint.findByPk(req.params.id);
 
-      if (!user) {
+      if (!complaint) {
         const error = new Error("Complaint not found");
         error.status = 404;
         throw error;
       }
 
-      await user.destroy();
+      await complaint.update(req.body);
+      await complaint.reload();
+      res.status(200).json(complaint);
+    } catch (error) {
+      next(error);
+    }
+  })
+
+  .delete("/:id", async (req, res, next) => {
+    try {
+      const complaint = await Complaint.findByPk(req.params.id);
+
+      if (!complaint) {
+        const error = new Error("Complaint not found");
+        error.status = 404;
+        throw error;
+      }
+
+      await complaint.destroy();
       res.status(204).end();
     } catch (error) {
       next(error);
