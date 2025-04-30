@@ -1,0 +1,5 @@
+Tulis rincian kejadian kemacetan. Contoh:
+
+Kemacetan parah di perempatan pancoran dikarenakan ada kendaraan mogok di tengah jalan. 
+Petugas sangat terbatas sehingga tidak bisa mengatasi situasi. 
+Mohon untuk segera mengirimkan petugas tambahan untuk mengevakuasi kendaraan dan mengurai kemacetan.

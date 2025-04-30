@@ -1,0 +1,4 @@
+Tulis rincian tindakan pungli. Contoh:
+
+Petugas melakukan tindakan pungli dengan mencari - cari kesalahan pengendara dengan nomor polisi B 1111 AH di tol Jagorawi KM 12. 
+Petugas yang melakukan pungli bernama XXX.
