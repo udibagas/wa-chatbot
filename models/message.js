@@ -249,7 +249,7 @@ module.exports = (sequelize, DataTypes) => {
 
       currentState = "location";
       updatedContext.location = message.message;
-      message.sendResponse("location");
+      message.sendResponse("attachment");
     }
 
     if (session.currentState === "location") {
@@ -261,7 +261,7 @@ module.exports = (sequelize, DataTypes) => {
       currentState = "attachment";
       updatedContext.attachments = [];
       updatedContext.attachments.push(message.mediaUrl);
-      this.sendConfirmation();
+      message.sendConfirmation();
     }
 
     if (session.currentState === "attachment") {
@@ -269,7 +269,7 @@ module.exports = (sequelize, DataTypes) => {
       if (message.type === "image") {
         updatedContext.attachments = session.context.attachments || [];
         updatedContext.attachments.push(message.mediaUrl);
-        this.sendConfirmation();
+        message.sendConfirmation();
       } else {
         // end session
         active = false;
