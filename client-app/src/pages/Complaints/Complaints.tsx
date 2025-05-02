@@ -16,6 +16,7 @@ export interface ComplaintType {
   id: number;
   from: string;
   type: Type;
+  region: string;
   title: string;
   description: string;
   attachments: string[];

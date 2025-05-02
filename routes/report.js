@@ -49,4 +49,20 @@ router.get("/by-region", async (req, res, next) => {
   }
 });
 
+router.get("/by-priority", async (req, res, next) => {
+  try {
+    const reports = await Complaint.findAll({
+      attributes: [
+        "priority",
+        [sequelize.fn("COUNT", sequelize.col("priority")), "count"],
+      ],
+      group: "priority",
+    });
+
+    res.json(reports);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

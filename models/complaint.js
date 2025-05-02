@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         "extortion",
         "other"
       ),
+      region: DataTypes.STRING,
       title: DataTypes.STRING,
       description: DataTypes.TEXT,
       attachments: DataTypes.JSON,

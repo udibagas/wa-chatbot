@@ -45,11 +45,25 @@ export default function Report() {
     },
   })
 
+  const { data: byPriority } = useQuery({
+    queryKey: ['report/complaints/by-priority'],
+    staleTime: 60 * 1000, // 1 minute
+    refetchInterval: 60 * 1000, // 1 minute
+    queryFn: async () => {
+      const { data } = await axiosInstance.get<{ priority: string, count: string }[]>('/api/report/by-priority')
+      return data.map((item: { priority: string; count: string }) => ({
+        name: dictionary[item.priority as keyof typeof dictionary] + ' (' + item.count + ')',
+        value: +item.count
+      }))
+    },
+  })
+
   return (
     <div className="grid grid-cols-2 gap-5">
       <PieChart title="Jumlah Aduan Berdasarkan Status" data={byStatus!} width='100%' />
       <PieChart title="Jumlah Aduan Berdasarkan Jenis Aduan" data={byType!} width='100%' />
       <PieChart title="Jumlah Aduan Berdasarkan Area" data={byRegion!} width='100%' />
+      <PieChart title="Jumlah Aduan Berdasarkan Prioritas" data={byPriority!} width='100%' />
     </div>
   )
 }

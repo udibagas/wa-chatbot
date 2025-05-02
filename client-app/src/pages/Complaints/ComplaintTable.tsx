@@ -60,6 +60,7 @@ export default function ComplaintTable() {
         return <Tag color={color}>{dictionary[record.type]}</Tag>
       }
     },
+    { title: "Area", width: 150, dataIndex: "region", key: "region" },
     {
       title: "Judul Aduan",
       dataIndex: "title",
@@ -220,6 +221,10 @@ function showDetail(record: ComplaintType) {
             <Tag color={colors[record.type as keyof typeof colors]}>
               {dictionary[record.type]}
             </Tag>
+          </Descriptions.Item>
+
+          <Descriptions.Item label="Area">
+            {record.region}
           </Descriptions.Item>
 
           <Descriptions.Item label="Judul Aduan">
