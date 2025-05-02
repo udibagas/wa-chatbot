@@ -46,7 +46,7 @@ export default function Report() {
   })
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="grid grid-cols-2 gap-5">
       <PieChart title="Jumlah Aduan Berdasarkan Status" data={byStatus!} width='100%' />
       <PieChart title="Jumlah Aduan Berdasarkan Jenis Aduan" data={byType!} width='100%' />
       <PieChart title="Jumlah Aduan Berdasarkan Area" data={byRegion!} width='100%' />
