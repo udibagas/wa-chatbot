@@ -40,6 +40,33 @@ router
     }
   })
 
+  .get("/open", async (req, res, next) => {
+    try {
+      const complaints = await Complaint.findAll({
+        where: { status: { [Op.not]: "resolved" } },
+      });
+      res.status(200).json(complaints);
+    } catch (error) {
+      next(error);
+    }
+  })
+
+  .get("/:id", async (req, res, next) => {
+    try {
+      const complaint = await Complaint.findByPk(req.params.id);
+
+      if (!complaint) {
+        const error = new Error("Complaint not found");
+        error.status = 404;
+        throw error;
+      }
+
+      res.status(200).json(complaint);
+    } catch (error) {
+      next(error);
+    }
+  })
+
   .put("/:id", async (req, res, next) => {
     try {
       const complaint = await Complaint.findByPk(req.params.id);
@@ -70,17 +97,6 @@ router
 
       await complaint.destroy();
       res.status(204).end();
-    } catch (error) {
-      next(error);
-    }
-  })
-
-  .get("/open", async (req, res, next) => {
-    try {
-      const complaints = await Complaint.findAll({
-        where: { status: { [Op.not]: "resolved" } },
-      });
-      res.status(200).json(complaints);
     } catch (error) {
       next(error);
     }

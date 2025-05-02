@@ -1,5 +1,5 @@
 import { createBrowserRouter, redirect } from "react-router";
-import { axiosInstance } from "./lib/api";
+import { axiosInstance, getItem } from "./lib/api";
 import Loading from "./components/Loading";
 import { lazy } from "react";
 import Report from "./pages/Report/Report";
@@ -7,6 +7,7 @@ import Report from "./pages/Report/Report";
 const MainLayout = lazy(() => import('./layouts/MainLayout'))
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'))
 const Complaints = lazy(() => import('./pages/Complaints/Complaints'))
+const ComplaintDetail = lazy(() => import('./pages/Complaints/ComplaintDetail'))
 const Notification = lazy(() => import('./pages/Notification/Notification'))
 const Message = lazy(() => import('./pages/Messages/Message'))
 const Login = lazy(() => import('./pages/Login'))
@@ -32,6 +33,17 @@ export const router = createBrowserRouter([
       { index: true, element: <Dashboard /> },
       { path: '/users', element: <Users /> },
       { path: '/complaints', element: <Complaints /> },
+      {
+        path: '/complaints/:id',
+        element: <ComplaintDetail />,
+        loader: async ({ params }) => {
+          if (!params.id) {
+            throw new Error('Complaint ID is required');
+          }
+          const data = await getItem("/api/complaints", +params.id);
+          return data;
+        }
+      },
       { path: '/report', element: <Report /> },
       { path: '/messages', element: <Message /> },
       { path: '/notifications', element: <Notification /> },

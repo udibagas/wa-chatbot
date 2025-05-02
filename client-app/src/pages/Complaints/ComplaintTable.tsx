@@ -1,16 +1,17 @@
-import moment from "moment";
-import { AimOutlined, CheckCircleOutlined, CloseCircleOutlined, FileSearchOutlined, ReloadOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, FileSearchOutlined, ReloadOutlined } from "@ant-design/icons";
 import DataTable from "../../components/DataTable";
 import PageHeader from "../../components/PageHeader";
-import { Descriptions, Dropdown, Image, Input, MenuProps, Modal, Tag } from "antd";
+import { Dropdown, Input, MenuProps, Modal, Tag } from "antd";
 import { useDataTableContext } from "../../hooks/useDataTable";
 import { ComplaintType, Priority, Status } from "./Complaints";
 import ActionButton from "../../components/buttons/ActionButton";
 import { axiosInstance } from "../../lib/api";
 import { colors, dictionary } from "../../types";
+import { useNavigate } from "react-router";
 
 export default function ComplaintTable() {
   const { refreshData, setSearch, setCurrentPage, handleDelete } = useDataTableContext()
+  const navigate = useNavigate()
 
   function updateStatus(id: number, status: Status) {
     Modal.confirm({
@@ -68,25 +69,25 @@ export default function ComplaintTable() {
       render: (_: string, record: ComplaintType) => {
         return <a onClick={(e) => {
           e.preventDefault();
-          showDetail(record)
+          navigate(`/complaints/${record.id}`);
         }}>
           {record.title}
         </a>
       }
     },
-    {
-      title: "Lokasi",
-      dataIndex: "location",
-      key: "location",
-      render: (_: string, record: ComplaintType) => (
-        <a href={`https://www.google.com/maps?q=${record.location.latitude},${record.location.longitude}`} target="_blank">
-          {record.location.name && record.location.name + ', '}
-          {record.location.address && record.location.address + ', '}
-          Lat: {record.location.latitude}, Long: {record.location.longitude}
-        </a>
-      )
+    // {
+    //   title: "Lokasi",
+    //   dataIndex: "location",
+    //   key: "location",
+    //   render: (_: string, record: ComplaintType) => (
+    //     <a href={`https://www.google.com/maps?q=${record.location.latitude},${record.location.longitude}`} target="_blank">
+    //       {record.location.name && record.location.name + ', '}
+    //       {record.location.address && record.location.address + ', '}
+    //       Lat: {record.location.latitude}, Long: {record.location.longitude}
+    //     </a>
+    //   )
 
-    },
+    // },
     {
       title: "Prioritas",
       dataIndex: "priority",
@@ -154,7 +155,7 @@ export default function ComplaintTable() {
                 key: "view",
                 icon: <FileSearchOutlined />,
                 label: 'Lihat Rician',
-                onClick: () => showDetail(record)
+                onClick: () => navigate(`/complaints/${record.id}`)
               },
               {
                 key: "resolve",
@@ -188,95 +189,4 @@ export default function ComplaintTable() {
       <DataTable<ComplaintType> columns={columns} />
     </>
   )
-}
-
-function showDetail(record: ComplaintType) {
-  Modal.info({
-    title: "Rincian Aduan",
-    centered: true,
-    maskClosable: true,
-    keyboard: true,
-    closable: true,
-    okText: "Close",
-    okButtonProps: {
-      icon: <CloseCircleOutlined />,
-    },
-    width: '600px',
-    content: (
-      <div className="mt-5">
-        <Descriptions column={1} size="small" bordered>
-          <Descriptions.Item label="ID">
-            {record.id}
-          </Descriptions.Item>
-
-          <Descriptions.Item label="Waktu">
-            {moment(record.createdAt).format("DD-MMM-YYYY HH:mm:ss")}
-          </Descriptions.Item>
-
-          <Descriptions.Item label="Pengadu">
-            {record.from}
-          </Descriptions.Item>
-
-          <Descriptions.Item label="Jenis Aduan">
-            <Tag color={colors[record.type as keyof typeof colors]}>
-              {dictionary[record.type]}
-            </Tag>
-          </Descriptions.Item>
-
-          <Descriptions.Item label="Area">
-            {record.region}
-          </Descriptions.Item>
-
-          <Descriptions.Item label="Judul Aduan">
-            {record.title}
-          </Descriptions.Item>
-
-          <Descriptions.Item label="Rincian Aduan">
-            <div dangerouslySetInnerHTML={{ __html: record.description.replace(/\n/g, '<br />') }} />
-          </Descriptions.Item>
-
-          <Descriptions.Item label="Lokasi">
-            {record.location.name && record.location.name + ', '}
-            {record.location.address && record.location.address + ', '}
-            Lat: {record.location.latitude}, Long: {record.location.longitude}
-            <br />
-            <a className="py-1 px-3 border border-blue-500 rounded-md mt-2 inline-block" href={`https://www.google.com/maps?q=${record.location.latitude},${record.location.longitude}`} target="_blank">
-              <AimOutlined className="mr-2" />
-              Lihat di Google Maps
-            </a>
-          </Descriptions.Item>
-
-          <Descriptions.Item label="Prioritas">
-            <Tag color={colors[record.priority as keyof typeof colors]}>
-              {dictionary[record.priority]}
-            </Tag>
-          </Descriptions.Item>
-
-          <Descriptions.Item label="Status">
-            <Tag color={colors[record.status as keyof typeof colors]}>
-              {dictionary[record.status]}
-            </Tag>
-          </Descriptions.Item>
-        </Descriptions>
-
-        {
-          record.attachments.length > 0 &&
-          <div className="flex gap-5 mt-5">
-            {record.attachments.map((attachment, index) => {
-              return (
-                <div key={index} style={{ marginTop: 10 }}>
-                  <Image
-                    width={100}
-                    height={100}
-                    src={`/${attachment}`}
-                    alt=""
-                  />
-                </div>
-              )
-            })}
-          </div>
-        }
-      </div >
-    ),
-  })
 }
