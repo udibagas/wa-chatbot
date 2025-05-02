@@ -1,35 +1,7 @@
-import DashboardTable from "./DashboardTable";
-import { DataTableProvider } from "../../providers/DataTableProvider";
+import MapView from '../../components/MapView';
 
-export type Location = {
-  latitude: number;
-  longitude: number;
-  name?: string;
-  address?: string;
-}
-
-export type Type = "accident" | "congestion" | "extortion" | "environment" | "infrastructure" | "criminal" | "other";
-export type Status = "submitted" | "in_review" | "in_progress" | "resolved" | "rejected";
-export type Priority = "low" | "medium" | "high" | "critical";
-
-export interface ComplaintType {
-  id: number;
-  from: string;
-  type: Type;
-  title: string;
-  description: string;
-  attachments: string[];
-  location: Location;
-  status: Status;
-  priority: Priority;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export default function User() {
+export default function Dashboard() {
   return (
-    <DataTableProvider<ComplaintType> url='/api/complaints'>
-      <DashboardTable />
-    </DataTableProvider>
-  );
-};
+    <MapView />
+  )
+}

@@ -72,3 +72,41 @@ export type FileType = {
   url: string;
   size: number;
 };
+
+export const colors = {
+  submitted: "default",
+  in_review: "warning",
+  in_progress: "blue",
+  resolved: "success",
+  rejected: "error",
+  low: "default",
+  medium: "warning",
+  high: "error",
+  critical: "black",
+  other: "default",
+  accident: "error",
+  criminal: "error",
+  environment: "green",
+  infrastructure: "blue",
+  congestion: "warning",
+  extortion: "default",
+};
+
+export const dictionary = {
+  submitted: "Diajukan",
+  in_review: "Dalam Tinjauan",
+  in_progress: "Tindak Lanjut",
+  resolved: "Selesai",
+  rejected: "Ditolak",
+  low: "Rendah",
+  medium: "Sedang",
+  high: "Tinggi",
+  critical: "Kritis",
+  other: "Lainnya",
+  accident: "Kecelakaan",
+  criminal: "Tindak Kriminal",
+  environment: "Masalah Lingkungan",
+  infrastructure: "Masalah Infrastruktur",
+  congestion: "Kemacetan",
+  extortion: "Pungli",
+};

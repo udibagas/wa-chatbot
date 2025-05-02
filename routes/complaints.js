@@ -73,6 +73,17 @@ router
     } catch (error) {
       next(error);
     }
+  })
+
+  .get("/open", async (req, res, next) => {
+    try {
+      const complaints = await Complaint.findAll({
+        where: { status: { [Op.not]: "resolved" } },
+      });
+      res.status(200).json(complaints);
+    } catch (error) {
+      next(error);
+    }
   });
 
 module.exports = router;

@@ -4,47 +4,10 @@ import DataTable from "../../components/DataTable";
 import PageHeader from "../../components/PageHeader";
 import { Descriptions, Dropdown, Image, Input, MenuProps, Modal, Tag } from "antd";
 import { useDataTableContext } from "../../hooks/useDataTable";
-import { ComplaintType, Priority, Status } from "./Dashboard";
+import { ComplaintType, Priority, Status } from "./Complaints";
 import ActionButton from "../../components/buttons/ActionButton";
 import { axiosInstance } from "../../lib/api";
-
-const colors = {
-  submitted: 'default',
-  in_review: 'warning',
-  in_progress: 'blue',
-  resolved: 'success',
-  rejected: 'error',
-  low: 'default',
-  medium: 'warning',
-  high: 'error',
-  critical: 'black',
-  other: 'default',
-  accident: 'error',
-  criminal: 'error',
-  environment: 'green',
-  infrastructure: 'blue',
-  congestion: 'warning',
-  extortion: 'default',
-}
-
-const dictionary = {
-  submitted: 'Diajukan',
-  in_review: 'Dalam Tinjauan',
-  in_progress: 'Tindak Lanjut',
-  resolved: 'Selesai',
-  rejected: 'Ditolak',
-  low: 'Rendah',
-  medium: 'Sedang',
-  high: 'Tinggi',
-  critical: 'Kritis',
-  other: 'Lainnya',
-  accident: 'Kecelakaan',
-  criminal: 'Tindak Kriminal',
-  environment: 'Masalah Lingkungan',
-  infrastructure: 'Masalah Infrastruktur',
-  congestion: 'Kemacetan',
-  extortion: 'Pungli',
-}
+import { colors, dictionary } from "../../types";
 
 export default function ComplaintTable() {
   const { refreshData, setSearch, setCurrentPage, handleDelete } = useDataTableContext()
