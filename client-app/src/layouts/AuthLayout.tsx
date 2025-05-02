@@ -9,7 +9,7 @@ export default function AuthLayout() {
         </div>
         <div className="text-center w-[300px] bg-[#0C74B6] text-white p-4 flex flex-col justify-around">
           <div>
-            <div className="text-2xl font-bold mb-0">Lapor Pak!</div>
+            <div className="text-2xl font-bold mb-0">Lapor Ditlantas</div>
           </div>
           <small>© {new Date().getFullYear()}</small>
         </div>

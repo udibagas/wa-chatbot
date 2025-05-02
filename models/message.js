@@ -12,6 +12,18 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
 
+    findRegion(lng, lat) {
+      const jakartaRegions = require("../lib/jakarta.json");
+
+      const point = turf.point([lng, lat]);
+      for (const region of jakartaRegions) {
+        if (turf.booleanPointInPolygon(point, region.polygon)) {
+          return region.name;
+        }
+      }
+      return "Outside Jakarta";
+    }
+
     async downloadMedia() {
       const { data } = await axios.get(
         `https://${process.env.WA_BASE_URL}/${process.env.CLOUD_API_VERSION}/${this.message.id}`,

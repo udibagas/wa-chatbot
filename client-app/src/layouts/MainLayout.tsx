@@ -51,7 +51,7 @@ export default function MainLayout() {
             }}
           />
 
-          <span className='text-2xl font-bold'>LaporPak!</span>
+          <span className='text-2xl font-bold'>Lapor Ditlantas</span>
         </div>
 
 

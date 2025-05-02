@@ -2,6 +2,7 @@ import { createBrowserRouter, redirect } from "react-router";
 import { axiosInstance } from "./lib/api";
 import Loading from "./components/Loading";
 import { lazy } from "react";
+import Report from "./pages/Report/Report";
 
 const MainLayout = lazy(() => import('./layouts/MainLayout'))
 const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'))
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
       { index: true, element: <Dashboard /> },
       { path: '/users', element: <Users /> },
       { path: '/complaints', element: <Complaints /> },
+      { path: '/report', element: <Report /> },
       { path: '/messages', element: <Message /> },
       { path: '/notifications', element: <Notification /> },
       { path: '*', element: <div>404 Not Found</div> },
