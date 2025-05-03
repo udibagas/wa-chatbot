@@ -1,11 +1,33 @@
 "use strict";
 const { Model } = require("sequelize");
+const turf = require("@turf/turf");
+const jakartaRegions = require("../lib/jakarta.json");
+
 module.exports = (sequelize, DataTypes) => {
   class Complaint extends Model {
     static associate(models) {
       Complaint.hasMany(models.MediaAttachment, {
         foreignKey: "ComplaintId",
       });
+    }
+
+    findRegion() {
+      let result = "Di Luar Jakarta";
+      if (!this.location) {
+        return result;
+      }
+      const { longitude, latitude } = this.location;
+      const point = turf.point([longitude, latitude]);
+
+      for (const region of jakartaRegions) {
+        const polygon = turf.polygon(region.geometry.coordinates);
+        if (turf.booleanPointInPolygon(point, polygon)) {
+          result = region.properties.name;
+          break;
+        }
+      }
+
+      return result;
     }
   }
 
@@ -34,6 +56,10 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Complaint",
     }
   );
+
+  Complaint.beforeCreate((complaint) => {
+    complaint.region = complaint.findRegion();
+  });
 
   return Complaint;
 };
